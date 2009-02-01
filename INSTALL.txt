@@ -1,0 +1,12 @@
+$Id
+
+Watchdog RSS Module
+
+Installation Instructions:
+
+1. Place the watchdog_rss directory in sites/all/modules.
+
+2. Enable this module at Administer -> Site building -> Modules.
+
+3. The Watchdog RSS is now operational. Note down the URL once you enable the module
+    otherwise, you may access the url from /admin/settings/watchdog_rss
