@@ -1,10 +1,4 @@
-; $Id: commentrss.info,v 1.1.2.2 2007/07/14 22:06:54 tangent Exp $
+; $Id$
 name = Watchdog RSS
 description = Provides RSS feeds for Watchdog
 dependencies = watchdog
-
-; Information added by drupal.org packaging script on 2008-09-30
-version = "5.x-1.0"
-project = "watchdog_rss"
-datestamp = "1222778705"
-

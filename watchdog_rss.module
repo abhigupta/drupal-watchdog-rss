@@ -39,22 +39,24 @@ function watchdog_rss_menu($may_cache) {
     );
   } else {
     
-      $items[] = array(
-        'path'      =>  'watchdog-feed/' . variable_get('watchdog_rss_key', ''),
-        'title'     =>  'Watcdog RSS Feed',
-        'callback'  =>  'watchdog_rss_feed_site',
-        'access'    =>  TRUE,
-        'type'      =>  MENU_CALLBACK,
-      );
+    $items[] = array(
+      'path'      =>  'watchdog-feed/' . variable_get('watchdog_rss_key', ''),
+      'title'     =>  'Watcdog RSS Feed',
+      'callback'  =>  'watchdog_rss_feed_site',
+      'access'    =>  TRUE,
+      'type'      =>  MENU_CALLBACK,
+    );
     
-      if(arg(2) === 'watchdog' && arg(1) === 'logs' && arg(0) === 'admin') {
-        drupal_add_feed(
-              url('watchdog-feed/' . variable_get('watchdog_rss_key', '')),
-              t('@site - Watchdog Logs', array('@site' => variable_get('site_name', 'Drupal')))
-            );
-      }
+    if(arg(2) === 'watchdog' && arg(1) === 'logs' && arg(0) === 'admin') {
+      drupal_add_feed(
+            url('watchdog-feed/' . variable_get('watchdog_rss_key', '')),
+            t('@site - Watchdog Logs', array('@site' => variable_get('site_name', 'Drupal')))
+          );
     }
+  }
+  
   return $items;
+
 }
 
 /**
@@ -85,8 +87,10 @@ function watchdog_rss_admin_form() {
  * Reset the Feed URL
  */
 function watchdog_rss_admin_form_submit() {
+
   variable_del('watchdog_rss_key');
   variable_set('watchdog_rss_key', sha1(watchdog_rss_random_gen(rand(5,50))));
+
 }
 
 /**
