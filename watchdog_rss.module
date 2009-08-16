@@ -37,6 +37,7 @@ function watchdog_rss_menu($may_cache) {
       'callback arguments' => array('watchdog_rss_admin_form'),
       'access'    =>  user_access('administer site configuration'),
     );
+    
   } else {
     
     $items[] = array(
@@ -67,7 +68,7 @@ function watchdog_rss_admin_form() {
   global $base_url;
     
   $form['#base'] = 'watchdog_rss_form';
-    $link = url($base_url.'/watchdog-feed/'.variable_get('watchdog_rss_key',''), NULL, NULL, TRUE);
+    $link = url('watchdog-feed/'.variable_get('watchdog_rss_key',''), NULL, NULL, TRUE);
 
   $form['div_tag'] = array(
     '#type' => 'markup',
@@ -110,7 +111,7 @@ function watchdog_rss_feed_site($param = NULL) {
   
   if(httpauth_login()) {
   
-    global $base_url;
+    global $base_url, $locale;
     
     if (!isset($param)) {
   
@@ -196,6 +197,10 @@ function watchdog_rss_format_items(&$last_time) {
         'key' => 'guid',
         'value' => 'log event ' . $event->wid . ' at ' . url($base_url, NULL, NULL, TRUE),
         'attributes' => array('isPermaLink' => 'false')
+      ),
+      array(
+	'key' => 'category',
+	'value' => $event->type,
       )
     );
 
@@ -209,7 +214,7 @@ function watchdog_rss_format_items(&$last_time) {
                   '<br /><strong>Referer</strong>: ' . l($event->referer, $event->referer) : '';
     $content .= '<br /><strong>IP</strong>: ' . l($event->hostname, 'http://www.melissadata.com/lookups/iplocation.asp', array(), 'ipaddress=' . $event->hostname);
 
-    $items .= format_rss_item($title, $link, $content, $extra);
+    $items .= format_rss_item(strip_tags($title), $link, $content, $extra);
   }
   return $items;
 }
