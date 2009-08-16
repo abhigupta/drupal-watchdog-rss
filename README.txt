@@ -9,11 +9,15 @@ from the website.
 
 It currently provides a single feed with all the Watchdog Entries.
 
-The Feed is available publically, but it is protected by creating a 
-unique URL to your websites feed. Don't share this URL with others as it
-may compromise the security of your system. You can also reset the feed URL 
-from settings page.
+The Feed is protected using 2 methonds:
 
+1) Creating a unique URL to your websites feed. You can also reset 
+   the feed URL from settings page.
+
+2) HTTP Authentication. Accessing the feed requires HTTP Authentication.
+   The authentication is linked to the user accounts in Drupal. There is 
+   a new permission "Access Watchdog RSS Feed" that can be assigned to
+   a new user.
 
 Installation
 ------------------------------------------------------------------------------
