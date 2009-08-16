@@ -30,23 +30,23 @@ function watchdog_rss_menu($may_cache) {
   if ($may_cache) {
 
     $items[] = array(
-        'path'      =>  'admin/settings/watchdog_rss',
-        'title'     =>  'Watchdog RSS',
-        'description' => t('Access / Change your site\'s Watchdog RSS Feed URL.'),
-        'callback'  =>  'drupal_get_form',
-        'callback arguments' => array('watchdog_rss_admin_form'),
-        'access'    =>  user_access('administer site configuration'),
+      'path'      =>  'admin/settings/watchdog_rss',
+      'title'     =>  'Watchdog RSS',
+      'description' => t('Access / Change your site\'s Watchdog RSS Feed URL.'),
+      'callback'  =>  'drupal_get_form',
+      'callback arguments' => array('watchdog_rss_admin_form'),
+      'access'    =>  user_access('administer site configuration'),
     );
 
   }
   else {
 
     $items[] = array(
-        'path'      =>  'watchdog-feed/'. variable_get('watchdog_rss_key', ''),
-        'title'     =>  'Watcdog RSS Feed',
-        'callback'  =>  'watchdog_rss_feed_site',
-        'access'    =>  TRUE,
-        'type'      =>  MENU_CALLBACK,
+      'path'      =>  'watchdog-feed/'. variable_get('watchdog_rss_key', ''),
+      'title'     =>  'Watcdog RSS Feed',
+      'callback'  =>  'watchdog_rss_feed_site',
+      'access'    =>  TRUE,
+      'type'      =>  MENU_CALLBACK,
     );
 
     if (arg(2) === 'watchdog' && arg(1) === 'logs' && arg(0) === 'admin') {
@@ -72,14 +72,14 @@ function watchdog_rss_admin_form() {
   $link = url('watchdog-feed/'. variable_get('watchdog_rss_key', ''), NULL, NULL, TRUE);
 
   $form['div_tag'] = array(
-      '#type' => 'markup',
-      '#value' => '<br /><h3>Feed URL</h3>'. l($link, $link) .'<br />'.
-      '<p>Reset your Feed URL if you want to change the URL of your feed</p>',
+    '#type' => 'markup',
+    '#value' => '<br /><h3>Feed URL</h3>'. l($link, $link) .'<br />'.
+    '<p>Reset your Feed URL if you want to change the URL of your feed</p>',
   );
 
   $form['submit'] = array(
-      '#type' => 'submit',
-      '#value' => t('Reset Feed URL'),
+    '#type' => 'submit',
+    '#value' => t('Reset Feed URL'),
   );
 
   return $form;
@@ -119,12 +119,12 @@ function watchdog_rss_feed_site($param = NULL) {
       $items = watchdog_rss_format_items($last_time);
 
       $channel = array(
-          'version'     => '2.0',
-          'title'       => t('@site_name - Watchdog Logs', array('@site_name' => variable_get('site_name', 'Drupal'))),
-          'link'        => url($base_url .'watchdog-feed/'. variable_get('watchdog_rss_key', ''), NULL, NULL, TRUE),
-          'description' => t('Watchdog Logs'),
-          'language'    => $locale,
-          'lastBuildDate' => $last_time,
+        'version'     => '2.0',
+        'title'       => t('@site_name - Watchdog Logs', array('@site_name' => variable_get('site_name', 'Drupal'))),
+        'link'        => url($base_url .'watchdog-feed/'. variable_get('watchdog_rss_key', ''), NULL, NULL, TRUE),
+        'description' => t('Watchdog Logs'),
+        'language'    => $locale,
+        'lastBuildDate' => $last_time,
       );
 
       watchdog_rss_format_feed($items, $channel);
@@ -143,12 +143,12 @@ function watchdog_rss_format_feed($items, $channel = array(), $namespaces = arra
   global $base_url, $locale;
 
   $channel_defaults = array(
-      'version'     => '2.0',
-      'title'       => t('@site_name - Comments', array('@site_name' => variable_get('site_name', 'Drupal'))),
-      'link'        => $base_url,
-      'description' => t('Comments'),
-      'language'    => $locale,
-      'lastBuildDate' => date('r', mktime()),
+    'version'     => '2.0',
+    'title'       => t('@site_name - Comments', array('@site_name' => variable_get('site_name', 'Drupal'))),
+    'link'        => $base_url,
+    'description' => t('Comments'),
+    'language'    => $locale,
+    'lastBuildDate' => date('r', mktime()),
   );
 
   $channel = array_merge($channel_defaults, $channel);
@@ -160,7 +160,7 @@ function watchdog_rss_format_feed($items, $channel = array(), $namespaces = arra
   $output = '<?xml version="1.0" encoding="utf-8"?>'."\n";
   $output .= '<rss version="'. $channel['version'] .'" xml:base="'. $base_url .'"'. drupal_attributes($namespaces) .">\n";
   $output .= format_rss_channel($channel['title'], $channel['link'],
-      $channel['description'], $items, $channel['language'], $build_date);
+  $channel['description'], $items, $channel['language'], $build_date);
   $output .= "</rss>\n";
 
   drupal_set_header('Content-Type: application/rss+xml; charset=utf-8');
@@ -185,23 +185,23 @@ function watchdog_rss_format_items(&$last_time) {
 
     $title = "[$event->type] " . truncate_utf8($event->message, 56, TRUE, TRUE);
     $extra = array(
-        array(
+      array(
         'key' => 'pubDate',
         'value' => date('r', $event->timestamp)
-        ),
-        array(
+      ),
+      array(
         'key' => 'dc:creator',
         'value' => $event->type
-        ),
-        array(
+      ),
+      array(
         'key' => 'guid',
         'value' => 'log event '. $event->wid .' at '. url($base_url, NULL, NULL, TRUE),
         'attributes' => array('isPermaLink' => 'false')
-        ),
-        array(
+      ),
+      array(
         'key' => 'category',
         'value' => $event->type,
-        )
+      )
     );
 
     $last_time = empty($last_time) ? date('r', $event->timestamp) : $last_time;
@@ -211,10 +211,10 @@ function watchdog_rss_format_items(&$last_time) {
     $content .= !empty($event->link) ? ' ('. $event->link .')' : '';
     $content .= '<br /><br /><strong>Location</strong>: '. l($event->location, $event->location);
     $content .= ($event->referer !== $event->location) ?
-        '<br /><strong>Referer</strong>: '. l($event->referer, $event->referer) : '';
+      '<br /><strong>Referer</strong>: '. l($event->referer, $event->referer) : '';
     $content .= '<br /><strong>IP</strong>: '.
-                l($event->hostname, 'http://www.melissadata.com/lookups/iplocation.asp',
-                  array(), 'ipaddress='. $event->hostname);
+      l($event->hostname, 'http://www.melissadata.com/lookups/iplocation.asp',
+      array(), 'ipaddress='. $event->hostname);
 
     $items .= format_rss_item(strip_tags($title), $link, $content, $extra);
   }
@@ -253,8 +253,8 @@ function httpauth_login() {
     $pass = $_SERVER['PHP_AUTH_PW'];
   }
   else if (isset($_GET['HTTP_AUTHORIZATION'])) {
-      list($name, $pass) = httpauth_parse($_GET['HTTP_AUTHORIZATION']);
-    }
+    list($name, $pass) = httpauth_parse($_GET['HTTP_AUTHORIZATION']);
+  }
   else {
     httpauth_unauthorized();
     exit();
