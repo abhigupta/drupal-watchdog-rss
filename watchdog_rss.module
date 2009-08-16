@@ -1,5 +1,5 @@
 <?php
-// $Id
+// $Id$
 
 /**
  * @file
@@ -12,9 +12,9 @@
 function watchdog_rss_help($section) {
   $output = '';
   switch ($section) {
-	case 'admin/help#watchdog_rss':
-    $output = '<p>'. t('The Watchdog RSS module provides RSS feeds for Watchdog. ') .'</p>';
-    break;
+    case 'admin/help#watchdog_rss':
+      $output = '<p>'. t('The Watchdog RSS module provides RSS feeds for Watchdog. ') .'</p>';
+      break;
   }
   return $output;
 }
@@ -24,38 +24,39 @@ function watchdog_rss_help($section) {
  * Implementation of hook_menu().
  */
 function watchdog_rss_menu($may_cache) {
-  
+
   $items = array();
-  
-  if($may_cache) {
-    
+
+  if ($may_cache) {
+
     $items[] = array(
-      'path'      =>  'admin/settings/watchdog_rss',
-      'title'     =>  'Watchdog RSS',
-      'description' => t('Access / Change your site\'s Watchdog RSS Feed URL.'),
-      'callback'  =>  'drupal_get_form',
-      'callback arguments' => array('watchdog_rss_admin_form'),
-      'access'    =>  user_access('administer site configuration'),
+        'path'      =>  'admin/settings/watchdog_rss',
+        'title'     =>  'Watchdog RSS',
+        'description' => t('Access / Change your site\'s Watchdog RSS Feed URL.'),
+        'callback'  =>  'drupal_get_form',
+        'callback arguments' => array('watchdog_rss_admin_form'),
+        'access'    =>  user_access('administer site configuration'),
     );
-    
-  } else {
-    
+
+  }
+  else {
+
     $items[] = array(
-      'path'      =>  'watchdog-feed/' . variable_get('watchdog_rss_key', ''),
-      'title'     =>  'Watcdog RSS Feed',
-      'callback'  =>  'watchdog_rss_feed_site',
-      'access'    =>  TRUE,
-      'type'      =>  MENU_CALLBACK,
+        'path'      =>  'watchdog-feed/'. variable_get('watchdog_rss_key', ''),
+        'title'     =>  'Watcdog RSS Feed',
+        'callback'  =>  'watchdog_rss_feed_site',
+        'access'    =>  TRUE,
+        'type'      =>  MENU_CALLBACK,
     );
-    
-    if(arg(2) === 'watchdog' && arg(1) === 'logs' && arg(0) === 'admin') {
+
+    if (arg(2) === 'watchdog' && arg(1) === 'logs' && arg(0) === 'admin') {
       drupal_add_feed(
-            url('watchdog-feed/' . variable_get('watchdog_rss_key', '')),
-            t('@site - Watchdog Logs', array('@site' => variable_get('site_name', 'Drupal')))
-          );
+          url('watchdog-feed/'. variable_get('watchdog_rss_key', '')),
+          t('@site - Watchdog Logs', array('@site' => variable_get('site_name', 'Drupal')))
+      );
     }
   }
-  
+
   return $items;
 
 }
@@ -64,21 +65,21 @@ function watchdog_rss_menu($may_cache) {
  * Watchdog RSS Admin Form to Reset the URL
  */
 function watchdog_rss_admin_form() {
-    
+
   global $base_url;
-    
+
   $form['#base'] = 'watchdog_rss_form';
-    $link = url('watchdog-feed/'.variable_get('watchdog_rss_key',''), NULL, NULL, TRUE);
+  $link = url('watchdog-feed/'. variable_get('watchdog_rss_key', ''), NULL, NULL, TRUE);
 
   $form['div_tag'] = array(
-    '#type' => 'markup',
-    '#value' => '<br /><h3>Feed URL</h3>' . l($link, $link) . '<br />'
-                . '<p>Reset your Feed URL if you want to change the URL of your feed</p>',
+      '#type' => 'markup',
+      '#value' => '<br /><h3>Feed URL</h3>'. l($link, $link) .'<br />'.
+      '<p>Reset your Feed URL if you want to change the URL of your feed</p>',
   );
 
   $form['submit'] = array(
-    '#type' => 'submit',
-    '#value' => t('Reset Feed URL'),
+      '#type' => 'submit',
+      '#value' => t('Reset Feed URL'),
   );
 
   return $form;
@@ -90,7 +91,7 @@ function watchdog_rss_admin_form() {
 function watchdog_rss_admin_form_submit() {
 
   variable_del('watchdog_rss_key');
-  variable_set('watchdog_rss_key', sha1(watchdog_rss_random_gen(rand(5,50))));
+  variable_set('watchdog_rss_key', sha1(watchdog_rss_random_gen(rand(5, 50))));
 
 }
 
@@ -99,40 +100,39 @@ function watchdog_rss_admin_form_submit() {
  *
  * @return void
  * @author Abhi
- **/
-function watchdog_rss_perm()
-{
+ */
+function watchdog_rss_perm() {
   return array('access watchdog RSS feed');
 }
 /**
  * Publish a feed for all Watchdog Entries on the site.
  */
 function watchdog_rss_feed_site($param = NULL) {
-  
-  if(httpauth_login()) {
-  
+
+  if (httpauth_login()) {
+
     global $base_url, $locale;
-    
+
     if (!isset($param)) {
-  
+
       $last_time = '';
       $items = watchdog_rss_format_items($last_time);
-  
+
       $channel = array(
-        'version'     => '2.0',
-        'title'       => t('@site_name - Watchdog Logs', array('@site_name' => variable_get('site_name', 'Drupal'))),
-        'link'        => url($base_url.'watchdog-feed/'.variable_get('watchdog_rss_key',''), NULL, NULL, TRUE),
-        'description' => t('Watchdog Logs'),
-        'language'    => $locale,
-        'lastBuildDate' => $last_time,
+          'version'     => '2.0',
+          'title'       => t('@site_name - Watchdog Logs', array('@site_name' => variable_get('site_name', 'Drupal'))),
+          'link'        => url($base_url .'watchdog-feed/'. variable_get('watchdog_rss_key', ''), NULL, NULL, TRUE),
+          'description' => t('Watchdog Logs'),
+          'language'    => $locale,
+          'lastBuildDate' => $last_time,
       );
-  
+
       watchdog_rss_format_feed($items, $channel);
       return NULL;
     }
-    
+
   }
-	
+
   drupal_not_found();
 }
 
@@ -143,24 +143,24 @@ function watchdog_rss_format_feed($items, $channel = array(), $namespaces = arra
   global $base_url, $locale;
 
   $channel_defaults = array(
-    'version'     => '2.0',
-    'title'       => t('@site_name - Comments', array('@site_name' => variable_get('site_name', 'Drupal'))),
-    'link'        => $base_url,
-    'description' => t('Comments'),
-    'language'    => $locale,
-    'lastBuildDate' => date('r', mktime()),
+      'version'     => '2.0',
+      'title'       => t('@site_name - Comments', array('@site_name' => variable_get('site_name', 'Drupal'))),
+      'link'        => $base_url,
+      'description' => t('Comments'),
+      'language'    => $locale,
+      'lastBuildDate' => date('r', mktime()),
   );
 
   $channel = array_merge($channel_defaults, $channel);
 
-  $buildDate['lastBuildDate'] = $channel['lastBuildDate'];
+  $build_date['lastBuildDate'] = $channel['lastBuildDate'];
 
   $namespaces = array_merge(array('xmlns:dc' => 'http://purl.org/dc/elements/1.1/'), $namespaces);
 
   $output = '<?xml version="1.0" encoding="utf-8"?>'."\n";
   $output .= '<rss version="'. $channel['version'] .'" xml:base="'. $base_url .'"'. drupal_attributes($namespaces) .">\n";
   $output .= format_rss_channel($channel['title'], $channel['link'],
-                $channel['description'], $items, $channel['language'], $buildDate);
+      $channel['description'], $items, $channel['language'], $build_date);
   $output .= "</rss>\n";
 
   drupal_set_header('Content-Type: application/rss+xml; charset=utf-8');
@@ -172,7 +172,7 @@ function watchdog_rss_format_feed($items, $channel = array(), $namespaces = arra
  */
 
 function watchdog_rss_format_items(&$last_time) {
- global $base_url;
+  global $base_url;
 
   $items = '';
 
@@ -181,38 +181,40 @@ function watchdog_rss_format_items(&$last_time) {
 
   $events = db_query($SQL);
 
-  while($event = db_fetch_object($events)) {
+  while ($event = db_fetch_object($events)) {
 
     $title = "[$event->type] " . truncate_utf8($event->message, 56, TRUE, TRUE);
     $extra = array(
-      array(
+        array(
         'key' => 'pubDate',
         'value' => date('r', $event->timestamp)
-      ),
-      array(
+        ),
+        array(
         'key' => 'dc:creator',
         'value' => $event->type
-      ),
-      array(
+        ),
+        array(
         'key' => 'guid',
-        'value' => 'log event ' . $event->wid . ' at ' . url($base_url, NULL, NULL, TRUE),
+        'value' => 'log event '. $event->wid .' at '. url($base_url, NULL, NULL, TRUE),
         'attributes' => array('isPermaLink' => 'false')
-      ),
-      array(
-	'key' => 'category',
-	'value' => $event->type,
-      )
+        ),
+        array(
+        'key' => 'category',
+        'value' => $event->type,
+        )
     );
 
     $last_time = empty($last_time) ? date('r', $event->timestamp) : $last_time;
     $link = url('admin/logs/event/'. $event->wid, NULL, NULL, TRUE);
 
     $content  = $event->message;
-    $content .= !empty($event->link) ? ' (' . $event->link . ')' : '';
-    $content .= '<br /><br /><strong>Location</strong>: ' . l($event->location, $event->location);
+    $content .= !empty($event->link) ? ' ('. $event->link .')' : '';
+    $content .= '<br /><br /><strong>Location</strong>: '. l($event->location, $event->location);
     $content .= ($event->referer !== $event->location) ?
-                  '<br /><strong>Referer</strong>: ' . l($event->referer, $event->referer) : '';
-    $content .= '<br /><strong>IP</strong>: ' . l($event->hostname, 'http://www.melissadata.com/lookups/iplocation.asp', array(), 'ipaddress=' . $event->hostname);
+        '<br /><strong>Referer</strong>: '. l($event->referer, $event->referer) : '';
+    $content .= '<br /><strong>IP</strong>: '.
+                l($event->hostname, 'http://www.melissadata.com/lookups/iplocation.asp',
+                  array(), 'ipaddress='. $event->hostname);
 
     $items .= format_rss_item(strip_tags($title), $link, $content, $extra);
   }
@@ -223,17 +225,15 @@ function watchdog_rss_format_items(&$last_time) {
 /**
  * Provides a random string of the length requested.
  */
-function watchdog_rss_random_gen($length)
-{
+function watchdog_rss_random_gen($length) {
   $random= "";
   srand((double)microtime()*1000000);
   $char_list = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
   $char_list .= "abcdefghijklmnopqrstuvwxyz";
   $char_list .= "1234567890";
 
-  for($i = 0; $i < $length; $i++)
-  {
-    $random .= substr($char_list,(rand()%(strlen($char_list))), 1);
+  for ($i = 0; $i < $length; $i++) {
+    $random .= drupal_substr($char_list, (rand()%(drupal_strlen($char_list))), 1);
   }
   return $random;
 }
@@ -242,24 +242,24 @@ function watchdog_rss_random_gen($length)
  * Use HTTP Authentication to Verify the User
  */
 function httpauth_login() {
-  // Return if HTTP authentication is disabled.
-  //if (!variable_get('httpauth_status', FALSE)) {
-  //  return;
-  //}
+// Return if HTTP authentication is disabled.
+//if (!variable_get('httpauth_status', FALSE)) {
+//  return;
+//}
 
-  // Load credentials.
+// Load credentials.
   if (isset($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW'])) {
     $name = $_SERVER['PHP_AUTH_USER'];
     $pass = $_SERVER['PHP_AUTH_PW'];
   }
   else if (isset($_GET['HTTP_AUTHORIZATION'])) {
-    list($name, $pass) = httpauth_parse($_GET['HTTP_AUTHORIZATION']);
-  }
+      list($name, $pass) = httpauth_parse($_GET['HTTP_AUTHORIZATION']);
+    }
   else {
     httpauth_unauthorized();
     exit();
   }
- 
+
 
   if (isset($name, $pass)) {
     global $user;
@@ -283,7 +283,7 @@ function httpauth_login() {
       return user_access('access watchdog RSS feed');
     }
     else {
-      // We need common.inc for t(), and theme.inc for theme() (called indirectly by t()).
+    // We need common.inc for t(), and theme.inc for theme() (called indirectly by t()).
       require_once('includes/common.inc');
       require_once('includes/theme.inc');
 
@@ -293,7 +293,7 @@ function httpauth_login() {
       exit();
     }
   }
-  
+
   return FALSE;
 }
 

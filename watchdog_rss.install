@@ -1,5 +1,5 @@
 <?php
-// $Id
+// $Id$
 
 /**
  * @file
@@ -22,11 +22,11 @@ function watchdog_rss_uninstall() {
 function watchdog_rss_install() {
 
   variable_del('watchdog_rss_key');
-  variable_set('watchdog_rss_key', sha1(watchdog_rss_random_gen(rand(5,50))));
+  variable_set('watchdog_rss_key', sha1(watchdog_rss_random_gen(rand(5, 50))));
 
-  $link = url('watchdog-feed/' . variable_get('watchdog_rss_key',''), NULL, NULL, TRUE);
-  drupal_set_message('<strong>Watchdog RSS URL</strong>: '
-    . l($link, $link) . ' <br /><strong>Do Not Share this URL with others,
+  $link = url('watchdog-feed/'. variable_get('watchdog_rss_key', ''), NULL, NULL, TRUE);
+  drupal_set_message('<strong>Watchdog RSS URL</strong>: '.
+    l($link, $link) .' <br /><strong>Do Not Share this URL with others,
     as it may compromise the security of your system.</strong>');
     
 }
