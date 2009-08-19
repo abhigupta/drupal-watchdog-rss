@@ -1,4 +1,4 @@
 ; $Id$
 name = Watchdog RSS
 description = Provides RSS feeds for Watchdog
-dependencies = watchdog
+core = 6.x
