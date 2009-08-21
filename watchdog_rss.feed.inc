@@ -118,23 +118,6 @@ function watchdog_rss_format_items(&$last_time) {
   return $items;
 }
 
-
-/**
- * Provides a random string of the length requested.
- */
-function watchdog_rss_random_gen($length) {
-  $random= "";
-  srand((double)microtime()*1000000);
-  $char_list = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-  $char_list .= "abcdefghijklmnopqrstuvwxyz";
-  $char_list .= "1234567890";
-
-  for ($i = 0; $i < $length; $i++) {
-    $random .= drupal_substr($char_list, (rand()%(drupal_strlen($char_list))), 1);
-  }
-  return $random;
-}
-
 /**
  * Use HTTP Authentication to Verify the User
  */
