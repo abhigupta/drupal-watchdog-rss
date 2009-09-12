@@ -27,22 +27,22 @@ function watchdog_rss_menu() {
 
   $items = array();
 
-    $items['admin/settings/watchdog_rss'] = array(
-      'title'     =>  'Watchdog RSS',
-      'description' => 'Access / Change your site\'s Watchdog RSS Feed URL.',
-      'page callback'  =>  'drupal_get_form',
-      'page arguments' => array('watchdog_rss_admin_form'),
-      'access arguments' => array('administer site configuration'),
-	  'file' => 'watchdog_rss.admin.inc',
-    );
+  $items['admin/settings/watchdog_rss'] = array(
+    'title'     =>  'Watchdog RSS',
+    'description' => 'Access / Change your site\'s Watchdog RSS Feed URL.',
+    'page callback'  =>  'drupal_get_form',
+    'page arguments' => array('watchdog_rss_admin_form'),
+    'access arguments' => array('administer site configuration'),
+    'file' => 'watchdog_rss.admin.inc',
+  );
 
-    $items['watchdog-feed/'. variable_get('watchdog_rss_key', '')] = array(
-      'title'     =>  'Watcdog RSS Feed',
-      'page callback'  =>  'watchdog_rss_feed_site',
-      'access arguments' => array('access content'),
-	  'file' => 'watchdog_rss.feed.inc',
-      'type'      =>  MENU_CALLBACK,
-    );
+  $items['watchdog-feed/'. variable_get('watchdog_rss_key', '')] = array(
+    'title'     =>  'Watcdog RSS Feed',
+    'page callback'  =>  'watchdog_rss_feed_site',
+    'access arguments' => array('access watchdog feed'),
+    'file' => 'watchdog_rss.feed.inc',
+    'type'      =>  MENU_CALLBACK,
+  );
 
   return $items;
 
@@ -69,7 +69,7 @@ function watchdog_rss_menu() {
  * @author Abhi
  */
 function watchdog_rss_perm() {
-  return array('access watchdog RSS feed');
+  return array('access watchdog feed');
 }
 
 /**
