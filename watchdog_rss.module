@@ -1,12 +1,6 @@
 <?php
 // $Id$
 
-/* TODO $form['#base'] is gone
-   In FormAPI, many forms with different form_ids can share the same validate,
-   submit, and theme handlers. This can be done by manually populating the
-   $form['#submit'], $form['#validate'], and $form['#theme'] elements with
-   the proper function names. */
-
 /**
  * @file
  *   Publish RSS feeds for Watchdog.

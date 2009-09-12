@@ -5,7 +5,6 @@
  */
 function watchdog_rss_admin_form() {
 
-  $form['#base'] = 'watchdog_rss_form';
   $link = url('watchdog-feed/'. variable_get('watchdog_rss_key', ''), array('absolute' => TRUE));
 
   $form['div_tag'] = array(
